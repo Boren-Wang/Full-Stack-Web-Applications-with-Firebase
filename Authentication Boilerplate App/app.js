@@ -58,9 +58,12 @@ window.addEventListener('click', event => {
 
 // Makes your app aware of users
 auth.onAuthStateChanged(user => {
+  console.log("Auth State Changed!")
   if (user) {
     // Everything inside here happens if user is signed in
     console.log(user)
+    console.log(user.displayName)
+    console.log(user.email)
     uid = user.uid
     modal.style.display = 'none'
 
@@ -73,6 +76,7 @@ auth.onAuthStateChanged(user => {
     })
 
     // Greet the user with a message and make it personal by using their name
+    console.log("Display name is "+user.displayName)
     if (user.displayName) {
       document.getElementById('display-name-header').textContent = `Hello, ${user.displayName}`
     }
@@ -166,8 +170,12 @@ createUserForm.addEventListener('submit', event => {
   // Send values to Firebase
   auth.createUserWithEmailAndPassword(email, password)
     .then(() => {
+      console.log("User Created!")
       auth.currentUser.updateProfile({
         displayName: displayName
+      }).then(()=>{
+        console.log("Display name has been updated")
+        document.getElementById('display-name-header').textContent = `Hello, ${auth.currentUser.displayName}`
       })
       createUserForm.reset()
     })
